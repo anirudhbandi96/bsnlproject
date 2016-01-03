@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+</head>
+<body>
+<button type="button" value="get slots" id="getslots">get slots</button>
+ <br><br>
+<button type="button" value="unequip slots" id="rmslots">remove slots</button>
+ <br><br>
+<button type="button" value="equip slots" id="equipslots">equip slots</button> 
+<table>
+
+</table>
+<script>
+$(
+		function() {
+			
+		$("#getslots").click(getSlots);
+		$("#rmslots").click(rmSlots);
+		$("#equipslots").click(equipSlots);
+		            }
+		);
+
+		function getSlots(){
+			$("table").empty();
+			$("table").append("<tr><th>slot</th><th>card</th><th>equip</th><th>connected</th></tr>");
+	$.getJSON("main.jsp",function (data) {
+		    var tr;
+		    for (var i = 0; i < data.length; i++) {
+		        tr = $('<tr/>');
+		        tr.append("<td>" + data[i].slot_name + "</td>");
+		        tr.append("<td>" + data[i].slot_id + "</td>");
+		        tr.append("<td>" + data[i].status + "</td>");
+		        tr.append("<td>" + data[i].connected + "</td>");
+		        $('table').append(tr);
+		    }
+		});
+		}
+	function rmSlots(){
+		$("table").empty();
+		$("table").append("<tr><th></th><th>slot</th><th>card</th></tr><form method='get' action='main'>");
+$.getJSON("main2.jsp",function (data) {
+	    var tr;
+	    for (var i = 0; i < data.length; i++) {
+	        tr = $('<tr/>');
+	        tr.append("<td><input type='checkbox' name='slot' value='"+"slot_name"+"'></td>");
+	        tr.append("<td>" + data[i].slot_name + "</td>");
+	        tr.append("<td>" + data[i].slot_id + "</td>");
+	        //tr.append("<td>" + data[i].status + "</td>");
+	        //tr.append("<td>" + data[i].connected + "</td>");
+	        $('table').append(tr);
+	    }
+	    $('table').append("<input type='submit' ></form>");
+	});
+		}
+	function equipSlots(){
+		$("table").empty();
+		$("table").append("<tr><th>slot</th><th>card</th></tr>");
+$.getJSON("main3.jsp",function (data) {
+	    var tr;
+	    for (var i = 0; i < data.length; i++) {
+	        tr = $('<tr/>');
+	        tr.append("<td>" + data[i].slot_name + "</td>");
+	        tr.append("<td>" + data[i].slot_id + "</td>");
+	        //tr.append("<td>" + data[i].status + "</td>");
+	        //tr.append("<td>" + data[i].connected + "</td>");
+	        $('table').append(tr);
+	    }
+	});
+		}
+	
+</script>
+</body>
+</html>
