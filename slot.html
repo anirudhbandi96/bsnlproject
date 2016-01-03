@@ -11,13 +11,16 @@
 <button type="button" value="unequip slots" id="rmslots">remove slots</button>
  <br><br>
 <button type="button" value="equip slots" id="equipslots">equip slots</button> 
+<form method='get' action='main'>
 <table>
 
 </table>
+<input type='submit' name="submit"  />
+</form>
 <script>
 $(
 		function() {
-			
+			$("input:submit").hide();
 		$("#getslots").click(getSlots);
 		$("#rmslots").click(rmSlots);
 		$("#equipslots").click(equipSlots);
@@ -40,20 +43,22 @@ $(
 		});
 		}
 	function rmSlots(){
+		
 		$("table").empty();
-		$("table").append("<tr><th></th><th>slot</th><th>card</th></tr><form method='get' action='main'>");
+		$("table").append("<tr><th></th><th>slot</th><th>card</th></tr>");
 $.getJSON("main2.jsp",function (data) {
 	    var tr;
 	    for (var i = 0; i < data.length; i++) {
 	        tr = $('<tr/>');
-	        tr.append("<td><input type='checkbox' name='slot' value='"+"slot_name"+"'></td>");
+	        tr.append("<td><input type='checkbox' name='slot' value='"+data[i].slot_name+"'></td>");
 	        tr.append("<td>" + data[i].slot_name + "</td>");
 	        tr.append("<td>" + data[i].slot_id + "</td>");
 	        //tr.append("<td>" + data[i].status + "</td>");
 	        //tr.append("<td>" + data[i].connected + "</td>");
 	        $('table').append(tr);
 	    }
-	    $('table').append("<input type='submit' ></form>");
+	    $('input:submit').attr("value","remove");
+	    $('input:submit').show();
 	});
 		}
 	function equipSlots(){
@@ -63,14 +68,26 @@ $.getJSON("main3.jsp",function (data) {
 	    var tr;
 	    for (var i = 0; i < data.length; i++) {
 	        tr = $('<tr/>');
+	        tr.append("<td><input type='checkbox' name='slot' value='"+data[i].slot_name+"'></td>");
 	        tr.append("<td>" + data[i].slot_name + "</td>");
 	        tr.append("<td>" + data[i].slot_id + "</td>");
 	        //tr.append("<td>" + data[i].status + "</td>");
 	        //tr.append("<td>" + data[i].connected + "</td>");
 	        $('table').append(tr);
 	    }
+	    $('input:submit').attr("value","equip");
+	    $('input:submit').show();
 	});
 		}
+	/*function show(){
+		console.log('kjandsjfnka');
+		var a;
+		$("input:checkbox:checked").each(function(){
+		    a.push($(this).val());
+		});
+		console.log(a);
+		
+	}*/
 	
 </script>
 </body>
