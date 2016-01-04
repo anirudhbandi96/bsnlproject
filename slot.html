@@ -4,14 +4,81 @@
 <meta charset="ISO-8859-1">
 <title>Insert title here</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<style>
+table { 
+color: #333;
+font-family: Helvetica, Arial, sans-serif;
+width: 1350px; 
+border-collapse: 
+collapse; border-spacing: 0; 
+position : relative;
+top : -180px;
+}
+body{
+background-color:  #ccf2ff;
+}
+
+td, th { 
+border: 1px solid transparent; /* No more visible border */
+height: 30px; 
+transition: all 0.3s;  /* Simple transition for hover effect */
+}
+
+th {
+background: #DFDFDF;  /* Darken header a bit */
+font-weight: bold;
+}
+
+td {
+background: #FAFAFA;
+text-align: center;
+}
+
+button {
+	background-color: #699DB6;
+	border-color: rgba(0,0,0,0.3);
+	text-shadow: 0 1px 0 rgba(0,0,0,0.5);
+	color: #FFF;
+	display : inline-block;
+	margin : 80px 50px 50px 0px;
+	padding : 20px;
+}
+button.b{
+margin : 80px 50px 50px 0px;
+}
+
+	button:hover {
+		background-color: #4F87A2;
+		border-color: rgba(0,0,0,0.5);
+	}
+	
+	button:active {
+		background-color: #3C677B;
+		border-color: rgba(0,0,0,0.9);
+	}
+#logout{
+float : right;
+position : relative;
+bottom:190px;
+}
+div{
+background-color : #ccf2ff;
+height : 200px;
+}
+
+
+</style>
 </head>
 <body>
-<button type="button" value="get slots" id="getslots">get slots</button>
- <br><br>
-<button type="button" value="unequip slots" id="rmslots">remove slots</button>
- <br><br>
-<button type="button" value="equip slots" id="equipslots">equip slots</button> 
-<form method='get' action='main'>
+<div>
+<button  type="button" value="get slots" id="getslots" class="b">GET SLOTS</button>
+<button type="button" value="unequip slots" id="rmslots" class="b">REMOVE SLOTS</button>
+<button type="button" value="equip slots" id="equipslots"class="b">EQUIP SLOTS</button> 
+<form method="get" action="/bsnlproject/logout">
+<button type="submit" value="logout" id="logout">LOGOUT</button>
+</form>
+</div>
+<form method='get' action='/bsnlproject/main'>
 <table>
 
 </table>
@@ -21,6 +88,14 @@
 $(
 		function() {
 			$("input:submit").hide();
+			$.getJSON("/bsnlproject/priority.jsp",function (data){
+				if(data.priority=='no')
+				{
+					$("#rmslots").remove();
+				$("#equipslots").remove();
+				}
+			});
+			
 		$("#getslots").click(getSlots);
 		$("#rmslots").click(rmSlots);
 		$("#equipslots").click(equipSlots);
@@ -28,33 +103,46 @@ $(
 		);
 
 		function getSlots(){
+			$("input:submit").hide();
 			$("table").empty();
-			$("table").append("<tr><th>slot</th><th>card</th><th>equip</th><th>connected</th></tr>");
-	$.getJSON("main.jsp",function (data) {
+			$("table").append("<tr><th>slot</th><th>card</th><th>status</th></tr>");
+	$.getJSON("/bsnlproject/main.jsp",function (data) {
 		    var tr;
 		    for (var i = 0; i < data.length; i++) {
-		        tr = $('<tr/>');
-		        tr.append("<td>" + data[i].slot_name + "</td>");
-		        tr.append("<td>" + data[i].slot_id + "</td>");
+		    	
+		        tr = $('<tr>');
+		        tr.append("<td>" + data[i].slot_number + "</td>");
+		        tr.append("<td>" + data[i].card + "</td>");
 		        tr.append("<td>" + data[i].status + "</td>");
-		        tr.append("<td>" + data[i].connected + "</td>");
+		        tr.append("</tr>");
 		        $('table').append(tr);
-		    }
-		});
+		        console.log(data[i].status);
+		    	}
+		  //  $("table").children().children().children().eq(2).css('color','blue');
+		   var table = $('table');
+		   table.find('tr').each(function(){
+			   var columncell = $(this).find('td');
+			    if(columncell.eq(2).text()=='online'){
+			    	$(this).css('color','green');
+			    }
+			    if(columncell.eq(2).text()=='offline'){
+			    	$(this).css('color','red');
+			    }
+			   });
+		   });
 		}
+	
 	function rmSlots(){
 		
 		$("table").empty();
 		$("table").append("<tr><th></th><th>slot</th><th>card</th></tr>");
-$.getJSON("main2.jsp",function (data) {
+$.getJSON("/bsnlproject/main2.jsp",function (data) {
 	    var tr;
 	    for (var i = 0; i < data.length; i++) {
 	        tr = $('<tr/>');
-	        tr.append("<td><input type='checkbox' name='slot' value='"+data[i].slot_name+"'></td>");
-	        tr.append("<td>" + data[i].slot_name + "</td>");
-	        tr.append("<td>" + data[i].slot_id + "</td>");
-	        //tr.append("<td>" + data[i].status + "</td>");
-	        //tr.append("<td>" + data[i].connected + "</td>");
+	        tr.append("<td><input type='checkbox' name='slot' value='"+data[i].slot_number+"'></td>");
+	        tr.append("<td>" + data[i].slot_number + "</td>");
+	        tr.append("<td>" + data[i].card + "</td>");
 	        $('table').append(tr);
 	    }
 	    $('input:submit').attr("value","remove");
@@ -63,31 +151,20 @@ $.getJSON("main2.jsp",function (data) {
 		}
 	function equipSlots(){
 		$("table").empty();
-		$("table").append("<tr><th>slot</th><th>card</th></tr>");
-$.getJSON("main3.jsp",function (data) {
+		$("table").append("<tr><th></th><th>slot</th><th>card</th></tr>");
+$.getJSON("/bsnlproject/main3.jsp",function (data) {
 	    var tr;
 	    for (var i = 0; i < data.length; i++) {
 	        tr = $('<tr/>');
-	        tr.append("<td><input type='checkbox' name='slot' value='"+data[i].slot_name+"'></td>");
-	        tr.append("<td>" + data[i].slot_name + "</td>");
-	        tr.append("<td>" + data[i].slot_id + "</td>");
-	        //tr.append("<td>" + data[i].status + "</td>");
-	        //tr.append("<td>" + data[i].connected + "</td>");
+	        tr.append("<td><input type='checkbox' name='slot' value='"+data[i].slot_number+"'></td>");
+	        tr.append("<td>" + data[i].slot_number + "</td>");
+	        tr.append("<td>" + data[i].card + "</td>");
 	        $('table').append(tr);
 	    }
 	    $('input:submit').attr("value","equip");
 	    $('input:submit').show();
 	});
 		}
-	/*function show(){
-		console.log('kjandsjfnka');
-		var a;
-		$("input:checkbox:checked").each(function(){
-		    a.push($(this).val());
-		});
-		console.log(a);
-		
-	}*/
 	
 </script>
 </body>

@@ -1,7 +1,7 @@
 <%@ page import="javax.json.*" contentType="application/json" %>
 <%
 java.io.PrintWriter pw = response.getWriter();
-		
+		System.out.println("main()");
 			javax.sql.rowset.CachedRowSet crs = new oracle.jdbc.rowset.OracleCachedRowSet();
 		crs.setUrl("jdbc:oracle:thin:@localhost:1521:xe");
 		crs.setUsername("hr");
@@ -12,10 +12,9 @@ java.io.PrintWriter pw = response.getWriter();
     while(crs.next())
         {
     	JsonObjectBuilder row = Json.createObjectBuilder();
-		row.add("slot_name", crs.getString("slot_name"));
-		row.add("slot_id", crs.getString("slot_item"));
+		row.add("slot_number", crs.getString("slot_number"));
+		row.add("card", crs.getString("card"));
 		row.add("status",crs.getString("status"));
-		row.add("connected",crs.getString("connected"));
 		value.add(row.build());
         }
     crs.close();

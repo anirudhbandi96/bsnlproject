@@ -54,7 +54,7 @@ public class Main extends HttpServlet {
 		for(String a : array){
 		if(submit.equals("remove")){
 			con.setAutoCommit(false);
-			PreparedStatement ps = con.prepareStatement("update slots set status = 'yes' where slot_name = ?  ");
+			PreparedStatement ps = con.prepareStatement("update slots set status = 'offline' where slot_number = ?  ");
 			ps.setString(1,a);
 			int rows = ps.executeUpdate();
 			con.commit();
@@ -68,7 +68,7 @@ public class Main extends HttpServlet {
 		}
 		else if (submit.equals("equip")){
 			con.setAutoCommit(false);
-			PreparedStatement ps = con.prepareStatement("update slots set status = 'no' where slot_name = ?  ");
+			PreparedStatement ps = con.prepareStatement("update slots set status = 'online' where slot_number = ?  ");
 			ps.setString(1,a);
 			int rows = ps.executeUpdate();
 			con.commit();
@@ -82,11 +82,11 @@ public class Main extends HttpServlet {
              
 			}
 		if(submit.equals("remove")){
-			pw.println("<h3>Slots were Successfully disabled!!!</h3><a href='slot.html'>Click here to go back to the main page</a>");
+			pw.println("<h3>Selected Cards were Successfully Sent Offline!!!</h3><a href='secured/slot.html'>Click here to go back to the main page</a>");
 			
 		}
 		else if (submit.equals("equip")){
-			pw.println("<h3>Slots were Successfully Equipped!!!</h3><a href='slot.html'>Click here to go back to the main page</a>");
+			pw.println("<h3>Selected Cards are Online!!!</h3><a href='secured/slot.html'>Click here to go back to the main page</a>");
 			
 		}
 		}

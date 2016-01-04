@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<form method="post" action="login" onsubmit="return validate()">
+Username:
+<input type="text" id="username" name="username">
+Password:
+<input type="password" id="password" name="password">
+<input type="submit" value="login" name="login" >
+</form>
+<script>
+function validate()
+{
+	
+	var name = document.getElementById("username");
+	if(username.value=="")
+		{
+		alert("name field cannot be left empty");
+		name.focus();
+		return false;
+		}
+	var password = document.getElementById("password");
+	if(value.value=="")
+		{
+		alert("name field cannot be left empty");
+		password.focus();
+		return false;
+		}
+	return true;
+		
+	
+	
+}
+
+</script>
+</body>
+</html>
