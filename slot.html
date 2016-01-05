@@ -24,9 +24,10 @@ height: 30px;
 transition: all 0.3s;  /* Simple transition for hover effect */
 }
 
-th {
+th,p{
 background: #DFDFDF;  /* Darken header a bit */
 font-weight: bold;
+font-size:20px
 }
 
 td {
@@ -34,7 +35,7 @@ background: #FAFAFA;
 text-align: center;
 }
 
-button {
+button.b {
 	background-color: #699DB6;
 	border-color: rgba(0,0,0,0.3);
 	text-shadow: 0 1px 0 rgba(0,0,0,0.5);
@@ -42,6 +43,20 @@ button {
 	display : inline-block;
 	margin : 80px 50px 50px 0px;
 	padding : 20px;
+}
+#submit{
+background-color: #699DB6;
+	border-color: rgba(0,0,0,0.3);
+	text-shadow: 0 1px 0 rgba(0,0,0,0.5);
+	color: #FFF;
+	padding : 20px;
+	width : 50px
+	height : 50px;
+	
+}
+#message{
+position:relative;
+bottom:130px;
 }
 button.b{
 margin : 80px 50px 50px 0px;
@@ -75,19 +90,21 @@ height : 200px;
 <button type="button" value="unequip slots" id="rmslots" class="b">REMOVE SLOTS</button>
 <button type="button" value="equip slots" id="equipslots"class="b">EQUIP SLOTS</button> 
 <form method="get" action="/bsnlproject/logout">
-<button type="submit" value="logout" id="logout">LOGOUT</button>
+<button type="submit" value="logout" id="logout" class="b">LOGOUT</button>
 </form>
 </div>
-<form method='get' action='/bsnlproject/main'>
 <table>
 
 </table>
-<input type='submit' name="submit"  />
-</form>
+<div id="message">
+<button type='button' name="submit" id="submit"></button>
+
+<p></p>
+</div>
 <script>
 $(
 		function() {
-			$("input:submit").hide();
+			$("#submit").hide();
 			$.getJSON("/bsnlproject/priority.jsp",function (data){
 				if(data.priority=='no')
 				{
@@ -99,11 +116,12 @@ $(
 		$("#getslots").click(getSlots);
 		$("#rmslots").click(rmSlots);
 		$("#equipslots").click(equipSlots);
+		$("#submit").click(submit);
 		            }
 		);
 
 		function getSlots(){
-			$("input:submit").hide();
+			$("#submit").hide();
 			$("table").empty();
 			$("table").append("<tr><th>slot</th><th>card</th><th>status</th></tr>");
 	$.getJSON("/bsnlproject/main.jsp",function (data) {
@@ -133,7 +151,7 @@ $(
 		}
 	
 	function rmSlots(){
-		
+		$('p').hide();
 		$("table").empty();
 		$("table").append("<tr><th></th><th>slot</th><th>card</th></tr>");
 $.getJSON("/bsnlproject/main2.jsp",function (data) {
@@ -145,11 +163,13 @@ $.getJSON("/bsnlproject/main2.jsp",function (data) {
 	        tr.append("<td>" + data[i].card + "</td>");
 	        $('table').append(tr);
 	    }
-	    $('input:submit').attr("value","remove");
-	    $('input:submit').show();
+	    $('#submit').text("remove");
+	    $('#submit').attr("value","remove");
+	    $('#submit').show();
 	});
 		}
 	function equipSlots(){
+		$('p').hide();
 		$("table").empty();
 		$("table").append("<tr><th></th><th>slot</th><th>card</th></tr>");
 $.getJSON("/bsnlproject/main3.jsp",function (data) {
@@ -161,10 +181,34 @@ $.getJSON("/bsnlproject/main3.jsp",function (data) {
 	        tr.append("<td>" + data[i].card + "</td>");
 	        $('table').append(tr);
 	    }
-	    $('input:submit').attr("value","equip");
-	    $('input:submit').show();
+	    $('#submit').text("equip");
+	    $('#submit').attr("value","equip");
+	    $('#submit').show();
 	});
 		}
+	
+	function submit(){
+		 var values = new Array();
+		$.each($("input[name='slot']:checked"),function(){
+			values.push($(this).val());
+		});
+		 console.log(values);
+		 	$.getJSON("/bsnlproject/main4.jsp",{slots:values,submit:$('#submit').val()},function (data) {
+			if(data.message == 'off')
+			{
+				$('p').text('Selected Cards were Successfully Sent Offline!!!');
+			}
+			else if(data.message == 'on')
+			{
+				$('p').text('Selected Cards are online!!!');
+			}
+			else
+			{
+				$('p').text('Something went wrong!!!');
+			}
+			$('p').show();
+		}); 
+	}
 	
 </script>
 </body>
